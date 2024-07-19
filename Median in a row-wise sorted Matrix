@@ -1,0 +1,62 @@
+class Solution{   
+public:
+    int median(vector<vector<int>> &matrix, int m, int n){
+       
+        int median = (m*n)/2;
+        
+        vector<int> elements;
+        
+        for(int i=0; i<m; i++){
+            for(int j=0; j<n; j++){
+                elements.push_back(matrix[i][j]);
+            }
+            
+        }
+        sort(elements.begin(), elements.end());
+        
+        return elements[median];
+    }
+}
+
+
+
+
+
+class Solution {
+ public:
+  int median(vector<vector<int>>& matrix, int m, int n) {
+    // Ensure m (rows) is odd (given condition)
+    if (m % 2 == 0) {
+      return -1; // Handle even rows case (error or throw exception)
+    }
+
+    int min_element = INT_MAX, max_element = INT_MIN;
+    // Find minimum and maximum element in the matrix
+    for (int i = 0; i < m; ++i) {
+      min_element = min(min_element, matrix[i][0]);
+      max_element = max(max_element, matrix[i][n - 1]);
+    }
+
+    int target_count = (m * n + 1) / 2; // Number of elements less than or equal to median
+
+    while (min_element <= max_element) {
+      int mid = (min_element + max_element) / 2;
+      int count = 0;
+
+      // Count elements less than or equal to mid in each row
+      for (int i = 0; i < m; ++i) {
+        int idx = upper_bound(matrix[i].begin(), matrix[i].end(), mid) - matrix[i].begin();
+        count += idx;
+      }
+
+      // Adjust search space based on count comparison
+      if (count < target_count) {
+        min_element = mid + 1;
+      } else {
+        max_element = mid - 1;
+      }
+    }
+
+    return min_element; // Median is the minimum element satisfying the count
+  }
+};
